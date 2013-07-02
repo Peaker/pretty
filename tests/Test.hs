@@ -64,16 +64,18 @@ myAssert msg b = putStrLn $ (if b then "Ok, passed " else "Failed test:\n  ") ++
 -- Ordinary tests
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-largeDocRenders :: [Doc]
+largeDocRenders :: [(String, Doc)]
 largeDocRenders =
-  [ hcat $ replicate 10000000 $ text "Hello"
-  , vcat $ replicate 10000000 $ text "Hello"
+  [ ("hsep", hsep $ replicate 10000000 $ text "Hello")
+  , ("hcat", hcat $ replicate 10000000 $ text "Hello")
+  , ("vcat", vcat $ replicate 10000000 $ text "Hello")
   ]
 
 large_doc :: IO ()
 large_doc = do
-  putStrLn "Testing large doc..."
-  mapM_ (evaluate . force . render) largeDocRenders
+  forM_ largeDocRenders $ \(name, doc) -> do
+    putStrLn $ "Test large doc: " ++ show name
+    evaluate . force $ render doc
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Quickcheck tests
