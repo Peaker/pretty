@@ -15,8 +15,8 @@
 import PrettyTestVersion
 import TestGenerators
 import TestStructures
-import TestLargePretty
 
+import Control.DeepSeq
 import Control.Exception
 import Control.Monad
 import Data.Char (isSpace)
@@ -64,11 +64,16 @@ myAssert msg b = putStrLn $ (if b then "Ok, passed " else "Failed test:\n  ") ++
 -- Ordinary tests
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+largeDocRenders :: [Doc]
+largeDocRenders =
+  [ hcat $ replicate 10000000 $ text "Hello"
+  , vcat $ replicate 10000000 $ text "Hello"
+  ]
+
 large_doc :: IO ()
 large_doc = do
   putStrLn "Testing large doc..."
-  evaluate largeDocRender
-  return ()
+  mapM_ (evaluate . force . render) largeDocRenders
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Quickcheck tests

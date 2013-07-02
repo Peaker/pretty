@@ -45,7 +45,6 @@ Test-Suite test-pretty
     other-modules:
         TestGenerators
         TestStructures
-        TestLargePretty
     extensions: CPP, BangPatterns
     include-dirs: src/Text/PrettyPrint
 
