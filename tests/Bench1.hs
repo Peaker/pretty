@@ -1,5 +1,9 @@
 module Main (main) where
 
+import Control.DeepSeq (force)
+import Control.Exception (evaluate)
+import Control.Monad (forM_)
+import System.TimeIt (timeItT)
 import Text.PrettyPrint.HughesPJ
 
 stuff :: String -> String -> Double -> Rational -> Int -> Int -> Int -> Doc
@@ -33,10 +37,12 @@ txt (Chr c)   s  = c:s
 txt (Str s1)  s2 = s1 ++ s2
 -}
 
+vcathcat :: Doc
+vcathcat = hcat . replicate 1000 . vcat . replicate 1000 $ text "["
+
 main :: IO ()
 main = do
-    putStrLn "==================================================="
-    putStrLn $ render doc1
+    -- putStrLn "==================================================="
 {-
     putStrLn "==================================================="
     putStrLn $ fullRender PageMode 1000 4 txt "" doc2
@@ -50,6 +56,12 @@ main = do
     putStrLn $ fullRender OneLineMode 1000 4 txt "" doc3
     putStrLn "==================================================="
 -}
-    putStrLn $ render doc3
-
-
+    forM_
+      [ ("doc1", doc1)
+      , ("doc2", doc2)
+      , ("doc3", doc3)
+      , ("vcathcat", vcathcat)
+      ] $ \(docName, doc) -> do
+      (time, _) <- timeItT . evaluate . force $ render doc
+      putStrLn $ docName ++ " rendering took: " ++ show time ++ " seconds"
+    return ()
