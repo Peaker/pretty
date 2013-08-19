@@ -47,6 +47,7 @@ Test-Suite test-pretty
         TestStructures
     extensions: CPP, BangPatterns
     include-dirs: src/Text/PrettyPrint
+    ghc-options: -rtsopts -prof -caf-all -auto-all
 
 benchmark Bench1
     type: exitcode-stdio-1.0

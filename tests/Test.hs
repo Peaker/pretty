@@ -76,6 +76,7 @@ large_doc = do
   forM_ largeDocRenders $ \(name, doc) -> do
     putStrLn $ "Test large doc: " ++ show name
     evaluate . force $ render doc
+  putStrLn "Test large docs success!"
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Quickcheck tests
